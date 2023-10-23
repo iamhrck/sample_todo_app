@@ -87,7 +87,7 @@ class _TodoListPageState extends State<TodoListPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               const SampleAppCounterLeadMessage(),
-              MyListView(),
+              MyListView(tasks: _list),
             ],
           ),
         ),

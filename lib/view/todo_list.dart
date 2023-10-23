@@ -2,14 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:sample_todo_app/model/task_model.dart';
 
 class MyListView extends StatelessWidget {
-  MyListView({super.key});
+  const MyListView({super.key, required this.tasks});
 
   // リストに表示するテキストアイテムのデータ
-  final List<TaskModel> _list = [
-    TaskModel(key: "1", description: "永福町オリーブ歯科", title: "歯医者", priority: Priority.high),
-    TaskModel(key: "2", description: "方南町", title: "インフルエンザ予防接種", priority: Priority.high),
-    TaskModel(key: "3", description: "残り7万ぐらい", title: "ふるさと納税"),
-  ];
+  final List<TaskModel> tasks;
 
   @override
   Widget build(BuildContext context) {
@@ -28,15 +24,15 @@ class MyListView extends StatelessWidget {
 
       */
       child: ListView.builder(
-        itemCount: _list.length,
+        itemCount: tasks.length,
         itemBuilder: (context, index) {
           return ListTile(
-            leading: _list[index].getPriorityIcon(),
+            leading: tasks[index].getPriorityIcon(),
             /**
             三項演算子（Dartでいう条件演算子）は`??`を使う
              */
-            title: Text(_list[index].title ?? ""),
-            subtitle: Text(_list[index].description ?? ""),
+            title: Text(tasks[index].title ?? ""),
+            subtitle: Text(tasks[index].description ?? ""),
             onTap: () {},
           );
         },
