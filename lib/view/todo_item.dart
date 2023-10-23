@@ -12,15 +12,3 @@ class SampleAppCounterLeadMessage extends StatelessWidget {
       );
   }
 }
-
-class TodoItem extends StatelessWidget {
-  const TodoItem({super.key});
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return const Text(
-      'あいうえお'
-      );
-  }
-}

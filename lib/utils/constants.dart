@@ -1,0 +1,1 @@
+const appTitle = 'Sample Todo App';

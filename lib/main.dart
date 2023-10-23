@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sample_todo_app/model/task_model.dart';
+import 'package:sample_todo_app/utils/constants.dart';
+import 'package:sample_todo_app/view/add-todo-item/add_todo_item.dart';
 import 'package:sample_todo_app/view/todo_item.dart';
 import 'package:sample_todo_app/view/todo_list.dart';
 
@@ -14,12 +15,12 @@ class TodoApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Sample Todo App',
+      title: appTitle,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: const TodoListPage(title: 'Sample Todo App'),
+      home: const TodoListPage(title: appTitle),
     );
   }
 }
@@ -37,7 +38,10 @@ class TodoListPage extends StatefulWidget {
 class _TodoListPageState extends State<TodoListPage> {
 
   void _incrementCounter() {
-    print("Hello");
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const AddTodoItemPage()),
+    );
   }
 
   @override
@@ -45,10 +49,9 @@ class _TodoListPageState extends State<TodoListPage> {
 
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Center(
-          child: Text(widget.title),
-        ),
+        title: Text(widget.title)
       ),
       body: Center(
         child: Column(
