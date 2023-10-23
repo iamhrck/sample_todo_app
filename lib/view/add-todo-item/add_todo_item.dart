@@ -1,5 +1,7 @@
 
 import 'package:flutter/material.dart';
+import 'package:sample_todo_app/model/task_model.dart';
+import 'package:sample_todo_app/utils/db_helper.dart';
 
 class AddTodoItemPage extends StatelessWidget {
   const AddTodoItemPage({super.key});
@@ -12,7 +14,7 @@ class AddTodoItemPage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text("TODO追加"),
       ),
-      body: const AddTodoItemContent()
+      body: AddTodoItemContent()
     );
   }
 
@@ -20,14 +22,17 @@ class AddTodoItemPage extends StatelessWidget {
 
 class AddTodoItemContent extends StatelessWidget {
   // コンポーネントには必須
-  const AddTodoItemContent({super.key});
+  AddTodoItemContent({super.key});
+
+  final DBHelper db = DBHelper();
 
   void cancelButtonClick(BuildContext context) {
     Navigator.of(context).pop();
   }
 
-    void addButtonClick() {
-    print("");
+  void addButtonClick() {
+    var model = TaskModel(description: "description", title: "title", priority: Priority.high);
+    db.insert(model);
   }
   
   @override

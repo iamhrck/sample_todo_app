@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:sample_todo_app/model/task_model.dart';
 import 'package:sample_todo_app/utils/constants.dart';
+import 'package:sample_todo_app/utils/db_helper.dart';
 import 'package:sample_todo_app/view/add-todo-item/add_todo_item.dart';
 import 'package:sample_todo_app/view/todo_item.dart';
 import 'package:sample_todo_app/view/todo_list.dart';
 
-void main() {
+void main() async {
+  // これなに
+  WidgetsFlutterBinding.ensureInitialized(); 
+
+  await DBHelper().init();
+
   runApp(const TodoApp());
 }
 
@@ -36,6 +43,26 @@ class TodoListPage extends StatefulWidget {
 }
 
 class _TodoListPageState extends State<TodoListPage> {
+  bool _isLoading = true;
+  
+  List<TaskModel> _list = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    // ここで非同期処理
+    List<TaskModel> tasks = await DBHelper().getTasks();
+
+    setState(() {
+      _isLoading = false;
+      _list = _list + tasks;
+    });
+  }
+
 
   void _incrementCounter() {
     Navigator.push(
@@ -46,27 +73,30 @@ class _TodoListPageState extends State<TodoListPage> {
 
   @override
   Widget build(BuildContext context) {
-
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title)
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const SampleAppCounterLeadMessage(),
-            MyListView(),
-          ],
+    if (_isLoading) {
+      return const CircularProgressIndicator();
+    } else {
+      return Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          title: Text(widget.title)
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), 
-    );
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              const SampleAppCounterLeadMessage(),
+              MyListView(),
+            ],
+          ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: _incrementCounter,
+          tooltip: 'Increment',
+          child: const Icon(Icons.add),
+        ), 
+      );
+    }
   }
 }

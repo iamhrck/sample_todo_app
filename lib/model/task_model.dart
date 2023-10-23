@@ -9,7 +9,7 @@ class TaskModel {
 
   TaskModel(
       { 
-        required this.key,
+        this.key,
         required this.description,
         required this.title,
         this.priority
@@ -18,15 +18,24 @@ class TaskModel {
 
   Icon getPriorityIcon() {
   switch (priority) {
-    case Priority.high:
-      return const Icon(Icons.priority_high);
-    case Priority.middle:
-      return const Icon(Icons.info);
-    case Priority.low:
-      return const Icon(Icons.low_priority);
-    default:
-      return const Icon(Icons.help);
+      case Priority.high:
+        return const Icon(Icons.priority_high);
+      case Priority.middle:
+        return const Icon(Icons.info);
+      case Priority.low:
+        return const Icon(Icons.low_priority);
+      default:
+        return const Icon(Icons.help);
+    }
   }
+
+  factory TaskModel.fromMap(Map<String, dynamic> map) {
+    return TaskModel(
+      key: map['key'],
+      description: map['description'],
+      title: map['title'],
+      priority: Priority.high
+    );
   }
 
 }
