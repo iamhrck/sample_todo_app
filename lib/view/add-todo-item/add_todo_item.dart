@@ -37,39 +37,46 @@ class _AddTodoItemContentState extends State<AddTodoItemContent> {
     taskDescriptionController.text = "";
   }
 
-  void addButtonClick() async {
+  Future<void> addButtonClick(BuildContext context) async {
     TaskModel task = TaskModel(
       description: taskDescriptionController.text,
       title: taskTitleController.text
     );
     bool result = await db.insert(task);
 
+    /**
+     * https://dart.dev/tools/linter-rules/use_build_context_synchronously
+     * 
+     * Don't use 'BuildContext's across async gaps. Try rewriting the code to not reference the 'BuildContext'
+     */
+    if (!mounted) return;
+
     if (result) {
       print("success");
-      clearButtonClick();
+      Navigator.pop(context, result);
     } else {
       print("failure");
     }
   }
 
-  void _showFailureDialog(BuildContext context) {
-    showCupertinoModalPopup<void>(
-      context: context,
-      builder: (BuildContext context) => CupertinoAlertDialog(
-        title: const Text('しばらく経ってから再度お試しください'),
-        content: const Text('Proceed with destructive action?'),
-        actions: <CupertinoDialogAction>[
-          CupertinoDialogAction(
-            isDestructiveAction: true,
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: const Text('OK'),
-          ),
-        ],
-      ),
-    );
-  }
+  // void _showFailureDialog(BuildContext context) {
+  //   showCupertinoModalPopup<void>(
+  //     context: context,
+  //     builder: (BuildContext context) => CupertinoAlertDialog(
+  //       title: const Text('しばらく経ってから再度お試しください'),
+  //       content: const Text('Proceed with destructive action?'),
+  //       actions: <CupertinoDialogAction>[
+  //         CupertinoDialogAction(
+  //           isDestructiveAction: true,
+  //           onPressed: () {
+  //             Navigator.pop(context);
+  //           },
+  //           child: const Text('OK'),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +127,9 @@ class _AddTodoItemContentState extends State<AddTodoItemContent> {
               ),
                 const SizedBox(width: 64),
                 TextButton(
-                  onPressed: addButtonClick, 
+                  onPressed: () {
+                    addButtonClick(context);
+                  }, 
                   child: const Text("add")
                 ),
               ],

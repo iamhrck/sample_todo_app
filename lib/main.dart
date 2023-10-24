@@ -64,11 +64,21 @@ class _TodoListPageState extends State<TodoListPage> {
   }
 
 
-  void _incrementCounter() {
-    Navigator.push(
+  Future<void> _navigateAddPageAndReload(BuildContext context) async {
+    final bool result = await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const AddTodoItemPage()),
     );
+
+    // いたる処理の中で状態をいじってるのがキモい
+    setState(() {
+      _isLoading = true;
+      _list = [];
+    });
+
+    if (result) {
+      await _loadData();
+    }
   }
 
   @override
@@ -92,7 +102,9 @@ class _TodoListPageState extends State<TodoListPage> {
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: _incrementCounter,
+          onPressed: () {
+            _navigateAddPageAndReload(context);
+          },
           tooltip: 'Increment',
           child: const Icon(Icons.add),
         ), 
