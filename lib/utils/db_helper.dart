@@ -49,18 +49,23 @@ class DBHelper {
     print('database initialized');
   }
 
-  Future<TaskModel> insert(TaskModel model) async {
+  Future<bool> insert(TaskModel model) async {
     final dbClient = await _dbHelper.database;
 
     Map<String, dynamic> row = {
         "title" : model.title,
         "description": model.description,
         "priority": "High"
-      };
-    int id = await dbClient.insert(_table, row);      
-    print('succedd to insert data. $id');
-    
-    return model;
+    };
+
+    try {
+      await dbClient.insert(_table, row);
+      print('success to insert data');
+      return true;     
+    } catch (e) {
+      print('failed to insert data');
+      return false;
+    }
   }
 
   Future<List<TaskModel>> getTasks() async {

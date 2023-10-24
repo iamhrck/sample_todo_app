@@ -1,4 +1,5 @@
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sample_todo_app/model/task_model.dart';
 import 'package:sample_todo_app/utils/db_helper.dart';
@@ -14,27 +15,62 @@ class AddTodoItemPage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text("TODO追加"),
       ),
-      body: AddTodoItemContent()
+      body: const AddTodoItemContent()
+    );
+  }
+}
+
+class AddTodoItemContent extends StatefulWidget {
+  const AddTodoItemContent({super.key});
+
+  @override
+  State<StatefulWidget> createState() => _AddTodoItemContentState();
+}
+
+class _AddTodoItemContentState extends State<AddTodoItemContent> {
+  final taskTitleController = TextEditingController();
+  final taskDescriptionController = TextEditingController();
+  final DBHelper db = DBHelper();
+
+  void clearButtonClick() {
+    taskTitleController.text = "";
+    taskDescriptionController.text = "";
+  }
+
+  void addButtonClick() async {
+    TaskModel task = TaskModel(
+      description: taskDescriptionController.text,
+      title: taskTitleController.text
+    );
+    bool result = await db.insert(task);
+
+    if (result) {
+      print("success");
+      clearButtonClick();
+    } else {
+      print("failure");
+    }
+  }
+
+  void _showFailureDialog(BuildContext context) {
+    showCupertinoModalPopup<void>(
+      context: context,
+      builder: (BuildContext context) => CupertinoAlertDialog(
+        title: const Text('しばらく経ってから再度お試しください'),
+        content: const Text('Proceed with destructive action?'),
+        actions: <CupertinoDialogAction>[
+          CupertinoDialogAction(
+            isDestructiveAction: true,
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text('OK'),
+          ),
+        ],
+      ),
     );
   }
 
-}
-
-class AddTodoItemContent extends StatelessWidget {
-  // コンポーネントには必須
-  AddTodoItemContent({super.key});
-
-  final DBHelper db = DBHelper();
-
-  void cancelButtonClick(BuildContext context) {
-    Navigator.of(context).pop();
-  }
-
-  void addButtonClick() {
-    var model = TaskModel(description: "description", title: "title", priority: Priority.high);
-    db.insert(model);
-  }
-  
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -43,30 +79,34 @@ class AddTodoItemContent extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-            const Row(
+            Row(
               children: [
-                Expanded(
+                const Expanded(
                   flex: 1,
                   child: Text("title"),
                 ),
-                SizedBox(width: 32),
+                const SizedBox(width: 32),
                 Expanded(
                   flex: 2,
-                  child: TextField(),
+                  child: TextField(
+                    controller: taskTitleController,
+                  ),
                 ),
               ],
             ),
             const SizedBox(height: 8),
-            const Row(
+             Row(
               children: [
-                Expanded(
+                const Expanded(
                   flex: 1,
                   child: Text("description"),
                 ),
-                SizedBox(width: 32),
+                const SizedBox(width: 32),
                 Expanded(
                   flex: 2,
-                  child: TextField(),
+                  child: TextField(
+                    controller: taskDescriptionController,
+                  ),
                 ),
               ],
             ),
@@ -75,10 +115,8 @@ class AddTodoItemContent extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
               TextButton(
-                onPressed: () {
-                  cancelButtonClick(context);
-                },
-                child: const Text('Cancel',style: TextStyle(color: Colors.black),),
+                onPressed: clearButtonClick,
+                child: const Text('Clear',style: TextStyle(color: Colors.black),),
               ),
                 const SizedBox(width: 64),
                 TextButton(
