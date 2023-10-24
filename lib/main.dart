@@ -79,6 +79,12 @@ class _TodoListPageState extends State<TodoListPage> {
     if (result) {
       await _loadData();
     }
+
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context)
+      ..removeCurrentSnackBar()
+      ..showSnackBar(const SnackBar(content: Text('Success')));
   }
 
   @override
