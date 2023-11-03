@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 class TaskModel {
-  String? key;
+  int? key;
   String? title;
   String? description;
   Priority? priority;
