@@ -84,7 +84,12 @@ class _TodoListPageState extends State<TodoListPage> {
 
     ScaffoldMessenger.of(context)
       ..removeCurrentSnackBar()
-      ..showSnackBar(const SnackBar(content: Text('Success')));
+      ..showSnackBar(
+        const SnackBar(
+          content: Text('new item is added'),
+          backgroundColor: Colors.green,
+        )
+      );
   }
 
   @override

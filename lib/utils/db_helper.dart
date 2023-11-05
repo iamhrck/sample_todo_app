@@ -74,6 +74,12 @@ class DBHelper {
     }
   }
 
+    Future<void> deleteTodo(int key) async {
+    final dbClient = await _dbHelper.database;
+    await dbClient.delete(table, where: 'key = ?', whereArgs: [key]);
+  }
+  
+
   Future<List<TaskModel>> getTasks() async {
     final dbClient = await _dbHelper.database;
 
